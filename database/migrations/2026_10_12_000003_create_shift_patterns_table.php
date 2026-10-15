@@ -20,6 +20,18 @@ return new class extends Migration
             $table->integer('grace_period_mins')->default(0);
             $table->timestamps();
         });
+
+        DB::table('shift_patterns')->insert([
+            [
+                'shift_name' => 'Standard Morning Shift',
+                'start_time' => '08:00:00',
+                'end_time' => '17:00:00',
+                'is_flexible' => false,
+                'grace_period_mins' => 15,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 
     /**

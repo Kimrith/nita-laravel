@@ -17,6 +17,14 @@ return new class extends Migration
             $table->boolean('is_paid')->default(true);
             $table->timestamps();
         });
+
+        DB::table('leave_types')->insert([
+            ['type_name' => 'Sick', 'is_paid' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['type_name' => 'Vacation', 'is_paid' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['type_name' => 'Personal', 'is_paid' => false, 'created_at' => now(), 'updated_at' => now()],
+            ['type_name' => 'Maternity / Paternity', 'is_paid' => true, 'created_at' => now(), 'updated_at' => now()],
+            ['type_name' => 'Unpaid Leave', 'is_paid' => false, 'created_at' => now(), 'updated_at' => now()],
+        ]);
     }
 
     /**

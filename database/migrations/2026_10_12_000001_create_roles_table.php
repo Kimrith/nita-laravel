@@ -17,6 +17,12 @@ return new class extends Migration
             $table->integer('access_level')->default(1);
             $table->timestamps();
         });
+
+        DB::table('roles')->insert([
+            ['role_name' => 'Admin', 'access_level' => 3, 'created_at' => now(), 'updated_at' => now()],
+            ['role_name' => 'Department Manager', 'access_level' => 2, 'created_at' => now(), 'updated_at' => now()],
+            ['role_name' => 'Staff', 'access_level' => 1, 'created_at' => now(), 'updated_at' => now()],
+        ]);
     }
 
     /**

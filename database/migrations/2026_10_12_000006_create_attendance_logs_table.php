@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('log_id');
             $table->foreignId('employee_id')->constrained('employees', 'employee_id')->cascadeOnDelete();
             $table->timestamp('event_timestamp');
-            $table->enum('event_type', ['Clock-In', 'Clock-Out', 'Break-Start', 'Break-End']);
+            $table->enum('event_type', ['Clock-In', 'Clock-Out', 'Break-Start', 'Break-End', 'On-Leave']);
             $table->string('source_device', 50)->comment('Kiosk, Mobile, Web');
             $table->json('location_data')->nullable()->comment('Geo-coordinates or geo-fencing metadata');
             $table->enum('status', ['Pending', 'Verified', 'Invalid'])->default('Pending');

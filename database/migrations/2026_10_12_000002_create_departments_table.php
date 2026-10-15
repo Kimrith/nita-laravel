@@ -17,6 +17,10 @@ return new class extends Migration
             $table->unsignedBigInteger('manager_id')->nullable();
             $table->timestamps();
         });
+
+        DB::table('departments')->insert([
+            ['department_name' => 'General / Administration', 'manager_id' => null, 'created_at' => now(), 'updated_at' => now()],
+        ]);
     }
 
     /**

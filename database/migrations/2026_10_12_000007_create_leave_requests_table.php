@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('status', ['Pending', 'Approved', 'Rejected'])->default('Pending');
             $table->foreignId('approver_id')->nullable()->constrained('employees', 'employee_id')->nullOnDelete();
             $table->timestamp('submitted_date')->useCurrent();
+            $table->json('location_data')->nullable()->comment('Geo-coordinates or IP metadata');
             $table->timestamps();
         });
     }

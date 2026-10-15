@@ -18,11 +18,16 @@ class OverviewController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+        if ($user && !$user->isAdmin()) {
+            return redirect()->route('dashboard.leaves');
+        }
+
         $today = Carbon::today();
 
         $stats = [
-            'total_employees' => Employee::count(),
-            'active_employees' => Employee::where('is_active', true)->count(),
+            'total_employees' => Employee::withoutAdmins()->count(),
+            'active_employees' => Employee::withoutAdmins()->where('is_active', true)->count(),
             'today_clocked_in' => AttendanceLog::whereDate('event_timestamp', $today)
                 ->where('event_type', 'Clock-In')
                 ->distinct('employee_id')
@@ -34,15 +39,15 @@ class OverviewController extends Controller
 
         $recentLogs = AttendanceLog::with('employee')
             ->orderBy('event_timestamp', 'desc')
-            ->take(10)
+            ->take(7)
             ->get();
 
         $leaveRequests = LeaveRequest::with(['employee.department', 'leaveType'])
             ->orderBy('submitted_date', 'desc')
-            ->take(5)
+            ->take(7)
             ->get();
 
-        $employees = Employee::orderBy('full_name')->get();
+        $employees = Employee::withoutAdmins()->orderBy('full_name')->get();
         $leaveTypes = LeaveType::all();
 
         return view('dashboard.partials.overview', [
