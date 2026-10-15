@@ -480,5 +480,22 @@
     "Notice: Selected employee has 0 Total Entitled leave days.": "ការជូនដំណឹង៖ បុគ្គលិកដែលបានជ្រើសរើសមានសិទ្ធិច្បាប់សរុប ០ ថ្ងៃ (Total Entitled is 0)។",
     "You are not allowed to request leave because you do not have any leave entitlement (Total Entitled is 0).": "អ្នកមិនត្រូវបានអនុញ្ញាតឱ្យស្នើសុំច្បាប់ឈប់សម្រាកទេ ដោយសារអ្នកមិនមានសិទ្ធិច្បាប់ឈប់សម្រាក (Total Entitled គឺ ០)។",
     "Cannot submit leave request: Selected employee does not have any leave entitlement (Total Entitled is 0).": "មិនអាចដាក់ពាក្យស្នើសុំច្បាប់បានទេ៖ បុគ្គលិកដែលបានជ្រើសរើសមិនមានសិទ្ធិច្បាប់ឈប់សម្រាក (Total Entitled គឺ ០)។",
-    "Entitled": "សិទ្ធិច្បាប់"
+    "Entitled": "សិទ្ធិច្បាប់",
+    "Too many login attempts. Please try again in :seconds seconds.": "ការព្យាយាមចូលគណនីច្រើនដងពេក។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេល :seconds វិនាទី។",
+    "Too many registration attempts. Please try again in :seconds seconds.": "ការព្យាយាមចុះឈ្មោះច្រើនដងពេក។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេល :seconds វិនាទី។",
+    "429 Too Many Requests — Security Shield | AttendX": "៤២៩ បានលើសចំនួនសំណើ — ប្រព័ន្ធការពារសុវត្ថិភាព | AttendX",
+    "HTTP 429 • Rate Limit Activated": "HTTP ៤២៩ • ប្រព័ន្ធកំណត់អត្រាសំណើត្រូវបានបើក",
+    "Too Many Requests": "បានលើសចំនួនសំណើ",
+    "You have exceeded the maximum threshold of 3 attempts per minute. For security against brute-force attacks and abuse, your access is temporarily throttled.": "អ្នកបានលើសពីដែនកំណត់អតិបរមា ៣ ដងក្នុងមួយនាទី។ ដើម្បីសុវត្ថិភាពទប់ស្កាត់ការវាយប្រហារចូលប្រើប្រាស់ដោយបង្ខំ និងការបំពាន ការចូលប្រើប្រាស់របស់អ្នកត្រូវបានផ្អាកជាបណ្តោះអាសន្ន។",
+    "Cooldown In Progress": "កំពុងរង់ចាំកំណត់ពេលវេលាឡើងវិញ",
+    "The security lock will automatically lift once the timer reaches zero. Please wait patiently.": "ការចាក់សោសុវត្ថិភាពនឹងត្រូវដោះលែងដោយស្វ័យប្រវត្តិនៅពេលកម្មវិធីកំណត់ពេលវេលាដល់សូន្យ។ សូមមេត្តារង់ចាំដោយអត់ធ្មត់។",
+    "Please Wait...": "សូមរង់ចាំ...",
+    "Try Again Now ↗": "ព្យាយាមម្តងទៀតឥឡូវនេះ ↗",
+    "Return to Sign In": "ត្រឡប់ទៅទំព័រចូលគណនី",
+    "Need immediate administrative access? Contact your workspace system administrator.": "ត្រូវការចូលប្រើជាបន្ទាន់ពីរដ្ឋបាល? សូមទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធរបស់អ្នក។",
+    "Background Sound": "សំឡេងផ្ទៃខាងក្រោយ",
+    "Tap To Play Sound": "ចុចដើម្បីចាក់សំឡេង",
+    "Audio Playing": "កំពុងចាក់សំឡេង",
+    "sec": "វិនាទី",
+    "Shield Unlocked": "បានដោះសោសុវត្ថិភាព"
 }

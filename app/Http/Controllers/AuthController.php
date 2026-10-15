@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\User;
+use App\Services\TelegramNotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -80,6 +81,9 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
+        // Push login notification to Telegram (BotFather)
+        TelegramNotificationService::sendLoginNotification($user, $request);
+
         // Redirect according to user role
         if ($user->isAdmin()) {
             return redirect()->intended(route('dashboard'))->with('success', __('Welcome back, :name!', ['name' => $user->name]));
@@ -134,6 +138,9 @@ class AuthController extends Controller
             'is_active' => false,
             'additional_leave_days' => 0,
         ]);
+
+        // Notify Telegram of new registration awaiting approval
+        TelegramNotificationService::sendRegistrationNotification($user, $request);
 
         return redirect()->route('auth.pending')->with('success', __('Your registration was submitted successfully! Your account is currently pending administrator approval.'));
     }

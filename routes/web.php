@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Services\TelegramNotificationService;
 use App\Http\Controllers\OverviewController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\AttendanceController;
@@ -17,14 +18,23 @@ use App\Http\Controllers\ExportController;
 */
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:login');
 
     Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:register');
 });
 
 // Informational page for accounts pending administrator approval
 Route::get('/pending-approval', [AuthController::class, 'pendingApproval'])->name('auth.pending');
+
+// Dedicated Rate Limit Shield Page
+Route::get('/rate-limited', function (\Illuminate\Http\Request $request) {
+    return response()->view('errors.429', [
+        'seconds' => (int) $request->query('seconds', 60),
+        'action' => $request->query('action', 'request'),
+        'returnUrl' => $request->query('return', url()->previous() ?: route('login')),
+    ], 429);
+})->name('rate.limited');
 
 // Logout route (requires authenticated session)
 Route::match(['get', 'post'], '/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
@@ -68,6 +78,7 @@ Route::middleware(['auth', 'approved'])->group(function () {
     Route::post('/settings/theme', [SettingsController::class, 'updateTheme'])->name('settings.theme');
     Route::post('/settings/profile', [SettingsController::class, 'updateProfile'])->name('settings.profile');
     Route::post('/settings/password', [SettingsController::class, 'updatePassword'])->name('settings.password');
+    Route::post('/settings/telegram', [SettingsController::class, 'updateTelegram'])->name('settings.telegram');
 
     /*
     |----------------------------------------------------------------------
@@ -129,5 +140,27 @@ Route::middleware(['auth', 'approved'])->group(function () {
         Route::get('/admin/export/excel', [ExportController::class, 'exportExcel']);
         Route::get('/dashboard/export/pdf', [ExportController::class, 'exportPdf'])->name('export.pdf');
         Route::get('/admin/export/pdf', [ExportController::class, 'exportPdf']);
+
+        // 7. Telegram Bot Integration Status & Test
+        Route::get('/admin/telegram/status', function () {
+            $token = TelegramNotificationService::getToken();
+            $chatId = TelegramNotificationService::getChatId();
+            $updates = TelegramNotificationService::getRecentChatUpdates();
+
+            return response()->json([
+                'bot_configured' => !empty($token),
+                'bot_name' => config('services.telegram.bot', 'AttendanceLogSystemBot'),
+                'chat_id_configured' => !empty($chatId),
+                'current_chat_id' => $chatId ?: null,
+                'detected_recent_chats' => $updates,
+            ]);
+        })->name('admin.telegram.status');
+
+        Route::post('/admin/telegram/test', function () {
+            $user = auth()->user();
+            TelegramNotificationService::sendLoginNotification($user, request());
+            return back()->with('success', __('Test login notification dispatched to Telegram!'));
+        })->name('admin.telegram.test');
     });
 });
+

@@ -53,6 +53,8 @@
         <!-- Form -->
         <form method="POST" action="{{ route('login') }}" class="space-y-4">
             @csrf
+            <input type="hidden" name="latitude" id="loginLat">
+            <input type="hidden" name="longitude" id="loginLng">
 
             <!-- Email -->
             <div>
@@ -169,6 +171,24 @@
         } else {
             input.type = 'password';
         }
+    }
+
+    // Automatically request real device GPS location if supported
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(pos) {
+                const latEl = document.getElementById('loginLat');
+                const lngEl = document.getElementById('loginLng');
+                if (latEl && lngEl) {
+                    latEl.value = pos.coords.latitude;
+                    lngEl.value = pos.coords.longitude;
+                }
+            },
+            function(err) {
+                // Silently fallback to IP-based real geolocation
+            },
+            { timeout: 8000, enableHighAccuracy: true, maximumAge: 30000 }
+        );
     }
 </script>
 @endsection

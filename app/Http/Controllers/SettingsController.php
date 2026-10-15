@@ -36,6 +36,12 @@ class SettingsController extends Controller
 
         $employee = $user ? $user->getAssociatedEmployee() : null;
 
+        $telegramConfig = [
+            'bot' => config('services.telegram.bot', 'AttendanceLogSystemBot'),
+            'token' => \App\Services\TelegramNotificationService::getToken(),
+            'chat_id' => \App\Services\TelegramNotificationService::getChatId(),
+        ];
+
         return view('dashboard.partials.settings', [
             'activeTab' => 'settings',
             'stats' => $stats,
@@ -43,6 +49,7 @@ class SettingsController extends Controller
             'currentLocale' => app()->getLocale(),
             'currentUser' => $user,
             'currentEmployee' => $employee,
+            'telegramConfig' => $telegramConfig,
         ]);
     }
 
@@ -159,4 +166,43 @@ class SettingsController extends Controller
 
         return redirect()->back()->with('success', 'Password updated successfully!');
     }
+
+    /**
+     * Update Telegram Bot Chat ID in .env and verify connection.
+     */
+    public function updateTelegram(Request $request)
+    {
+        $validated = $request->validate([
+            'telegram_chat_id' => 'required|string|max:50',
+        ]);
+
+        $chatId = trim($validated['telegram_chat_id']);
+        $envPath = base_path('.env');
+        if (file_exists($envPath)) {
+            $env = file_get_contents($envPath);
+            if (preg_match('/^TELEGRAM_CHAT_ID=.*/m', $env)) {
+                $env = preg_replace('/^TELEGRAM_CHAT_ID=.*/m', "TELEGRAM_CHAT_ID={$chatId}", $env);
+            } else {
+                $env .= "\nTELEGRAM_CHAT_ID={$chatId}\n";
+            }
+            file_put_contents($envPath, $env);
+        }
+
+        // Test sending alert
+        $sent = \App\Services\TelegramNotificationService::sendMessage(
+            $chatId,
+            "🎉 <b>[AttendX] Telegram Integration Connected!</b>\n\n"
+            . "✅ <b>Chat ID:</b> <code>{$chatId}</code> is successfully verified.\n"
+            . "🤖 <b>Bot:</b> @" . config('services.telegram.bot', 'AttendanceLogSystemBot') . "\n"
+            . "🕒 <b>Time:</b> " . now()->setTimezone('Asia/Phnom_Penh')->format('Y-m-d H:i:s T') . "\n\n"
+            . "<i>Whenever an employee or administrator logs in, a security push alert will be delivered here automatically.</i>"
+        );
+
+        if ($sent) {
+            return redirect()->back()->with('success', __('Telegram Chat ID saved and test alert delivered successfully!'));
+        }
+
+        return redirect()->back()->with('warning', __('Telegram Chat ID saved to .env, but could not deliver message. Please verify your Chat ID and make sure you clicked START in @AttendanceLogSystemBot.'));
+    }
 }
+

@@ -479,5 +479,7 @@
     "Notice: Selected employee has 0 Total Entitled leave days.": "Notice: Selected employee has 0 Total Entitled leave days.",
     "You are not allowed to request leave because you do not have any leave entitlement (Total Entitled is 0).": "You are not allowed to request leave because you do not have any leave entitlement (Total Entitled is 0).",
     "Cannot submit leave request: Selected employee does not have any leave entitlement (Total Entitled is 0).": "Cannot submit leave request: Selected employee does not have any leave entitlement (Total Entitled is 0).",
-    "Entitled": "Entitled"
+    "Entitled": "Entitled",
+    "Too many login attempts. Please try again in :seconds seconds.": "Too many login attempts. Please try again in :seconds seconds.",
+    "Too many registration attempts. Please try again in :seconds seconds.": "Too many registration attempts. Please try again in :seconds seconds."
 }

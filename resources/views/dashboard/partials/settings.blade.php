@@ -412,6 +412,81 @@
             </form>
         </div>
     </div>
+
+    @if(auth()->user() && auth()->user()->isAdmin())
+        <!-- Telegram Bot Push Notifications Card (Admin Only) -->
+        <div class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-xs transition-colors">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-[#229ED9] text-white flex items-center justify-center shadow-md shadow-[#229ED9]/25 flex-shrink-0">
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.196 1.006.128.832.941z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
+                            <span>{{ __('Telegram Bot Login Push Alerts') }}</span>
+                            @if(!empty($telegramConfig['chat_id']))
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
+                                    {{ __('Connected') }}
+                                </span>
+                            @else
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300 border border-amber-200 dark:border-amber-800">
+                                    {{ __('Awaiting Chat ID') }}
+                                </span>
+                            @endif
+                        </h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                            {{ __('Receive instant real-time security alerts on Telegram whenever an employee or administrator logs in.') }}
+                        </p>
+                    </div>
+                </div>
+                <a href="https://t.me/{{ $telegramConfig['bot'] ?? 'AttendanceLogSystemBot' }}" target="_blank" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-[#229ED9]/10 hover:bg-[#229ED9]/20 text-[#229ED9] transition border border-[#229ED9]/30 self-start sm:self-auto">
+                    <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.196 1.006.128.832.941z"/></svg>
+                    <span>@<span>{{ $telegramConfig['bot'] ?? 'AttendanceLogSystemBot' }}</span></span>
+                </a>
+            </div>
+
+            <!-- Configuration Form -->
+            <form method="POST" action="{{ route('settings.telegram') }}" class="space-y-4">
+                @csrf
+                <div>
+                    <label for="telegram_chat_id" class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+                        {{ __('Telegram Chat ID (Where alerts are delivered)') }} <span class="text-rose-500">*</span>
+                    </label>
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                        <input type="text" 
+                               id="telegram_chat_id" 
+                               name="telegram_chat_id" 
+                               value="{{ old('telegram_chat_id', $telegramConfig['chat_id'] ?? '') }}" 
+                               required 
+                               placeholder="e.g. 123456789 or -1001234567890" 
+                               class="flex-1 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-3.5 py-2 text-xs font-mono text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-[#229ED9]/30 focus:border-[#229ED9]">
+                        <button type="submit" class="inline-flex items-center justify-center gap-2 bg-[#229ED9] hover:bg-[#1E88E5] text-white font-semibold text-xs px-4 py-2 rounded-xl transition shadow-xs whitespace-nowrap">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+                            <span>{{ __('Save & Test Alert') }}</span>
+                        </button>
+                    </div>
+                    @error('telegram_chat_id')
+                        <p class="text-xs text-rose-500 font-semibold mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <!-- Guidance Box -->
+                <div class="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-400 space-y-1.5">
+                    <div class="font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                        <span>💡</span>
+                        <span>{{ __('How to get your Telegram Chat ID in 10 seconds:') }}</span>
+                    </div>
+                    <ol class="list-decimal list-inside space-y-1 pl-1 text-[11px] leading-relaxed">
+                        <li>{{ __('Open Telegram and search for:') }} <strong class="text-slate-800 dark:text-slate-200">@<span>{{ $telegramConfig['bot'] ?? 'AttendanceLogSystemBot' }}</span></strong> {{ __('and tap') }} <strong>START</strong> ({{ __('or type "hi"') }}).</li>
+                        <li>{{ __('To find your numeric ID, message') }} <a href="https://t.me/userinfobot" target="_blank" class="text-[#229ED9] hover:underline font-bold">@userinfobot</a> {{ __('which immediately replies with your ID.') }}</li>
+                        <li>{{ __('Paste the ID above and click "Save & Test Alert"!') }}</li>
+                    </ol>
+                </div>
+            </form>
+        </div>
+    @endif
 </div>
 @endsection
 
